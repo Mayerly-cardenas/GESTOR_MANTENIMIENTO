@@ -1,0 +1,15 @@
+{% extends "Motores/base.html" %}
+{% block title %}Eliminar Sala Eléctrica{% endblock %}
+{% block header %}Eliminar Sala Eléctrica{% endblock %}
+{% block content %}
+<div class="card-hg p-4" style="max-width: 480px;">
+    <p>¿Está seguro que desea eliminar la sala eléctrica <strong>{{ object.nombre }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="{% url 'motores:sala_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

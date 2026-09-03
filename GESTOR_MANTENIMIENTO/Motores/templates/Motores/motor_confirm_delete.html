@@ -1,0 +1,15 @@
+{% extends "Motores/base.html" %}
+{% block title %}Eliminar Motor{% endblock %}
+{% block header %}Eliminar Motor{% endblock %}
+{% block content %}
+<div class="card-hg p-4" style="max-width: 480px;">
+    <p>¿Está seguro que desea eliminar el motor <strong>{{ object.identification_no }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="{% url 'motores:motor_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

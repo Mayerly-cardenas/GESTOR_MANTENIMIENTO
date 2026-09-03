@@ -1,0 +1,111 @@
+{% extends "Motores/base.html" %}
+{% block title %}Motores{% endblock %}
+{% block header %}Registro de Motores{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'motores:motor_create' %}" class="btn btn-hg-blue">
+        <i class="bi bi-plus-lg"></i> Nuevo Motor
+    </a>
+{% endblock %}
+{% block content %}
+{% if evidencia %}
+<div class="alert alert-info d-flex justify-content-between align-items-center">
+    <span>Mostrando motores con {% if evidencia == "verde" %}EVIDENCIA COMPLETA{% elif evidencia == "naranja" %}EVIDENCIA PARCIAL{% elif evidencia == "rojo" %}SIN EVIDENCIA{% endif %}.</span>
+    <a href="{% url 'motores:motor_list' %}" class="alert-link">Ver todos</a>
+</div>
+{% endif %}
+<div class="row g-3 mb-3">
+    {% if not evidencia or evidencia == "verde" %}
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div>
+                <div class="text-muted small">EVIDENCIA COMPLETA</div>
+                <div class="fs-3 fw-bold" style="color:#5c7d1c">{{ total_verde }}</div>
+            </div>
+            <span class="dot" style="width:14px;height:14px;background-color:#94c12e"></span>
+        </div>
+    </div>
+    {% endif %}
+    {% if not evidencia or evidencia == "naranja" %}
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div>
+                <div class="text-muted small">EVIDENCIA PARCIAL</div>
+                <div class="fs-3 fw-bold" style="color:#b06400">{{ total_naranja }}</div>
+            </div>
+            <span class="dot" style="width:14px;height:14px;background-color:#ff9800"></span>
+        </div>
+    </div>
+    {% endif %}
+    {% if not evidencia or evidencia == "rojo" %}
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div>
+                <div class="text-muted small">SIN EVIDENCIA</div>
+                <div class="fs-3 fw-bold" style="color:#b02330">{{ total_rojo }}</div>
+            </div>
+            <span class="dot" style="width:14px;height:14px;background-color:#dc3545"></span>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card-hg p-3">
+    <form method="get" class="d-flex mb-3" style="max-width: 360px;">
+        <input type="text" name="q" value="{{ q }}" class="form-control me-2" placeholder="Buscar por ID o descripción">
+        <button class="btn btn-hg-navy" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hg align-middle">
+            <thead>
+                <tr>
+                    <th>Identification No.</th>
+                    <th>Equipment Description</th>
+                    <th>Fábrica</th>
+                    <th>Location ID</th>
+                    <th>Electrical Room ID</th>
+                    <th>Evidencia</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for motor in motores %}
+                <tr>
+                    <td class="fw-semibold">{{ motor.identification_no }}</td>
+                    <td>{{ motor.equipment_description }}</td>
+                    <td>{{ motor.fabrica }}</td>
+                    <td>{{ motor.ubicacion.nombre }}</td>
+                    <td>{{ motor.sala_electrica|default:"—" }}</td>
+                    <td>
+                        <span class="badge-semaforo badge-{{ motor.evidencia_estado }}">
+                            <span class="dot"></span> {{ motor.evidencia_count }}/3
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'motores:motor_detail' motor.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
+                        <a href="{% url 'motores:motor_update' motor.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'motores:motor_delete' motor.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center text-muted py-4">No hay motores registrados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}">Anterior</a></li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}">Siguiente</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "Motores/base.html" %}
+{% block title %}{% if object %}Editar Fábrica{% else %}Nueva Fábrica{% endif %}{% endblock %}
+{% block header %}{% if object %}Editar Fábrica{% else %}Nueva Fábrica{% endif %}{% endblock %}
+{% block content %}
+<div class="card-hg p-3" style="max-width: 480px;">
+    <form method="post">
+        {% csrf_token %}
+        <label class="form-label">Nombre</label>
+        {{ form.nombre }}
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-hg-blue">Guardar</button>
+            <a href="{% url 'motores:fabrica_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "Motores/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block header %}Dashboard{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'inicio' %}" class="btn btn-hg-navy"><i class="bi bi-arrow-clockwise"></i> Actualizar</a>
+{% endblock %}
+{% block content %}
+<div class="banner-hg mb-4">
+    <div class="banner-icon"><i class="bi bi-grid-1x2"></i></div>
+    <div>
+        <div class="banner-eyebrow">MOTORES</div>
+        <div class="banner-title">Mantenimiento</div>
+        <div class="banner-subtitle">PLANTA NOBSA</div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <a href="{% url 'motores:motor_list' %}" class="kpi-card-link">
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-navy"><i class="bi bi-cpu"></i></div>
+            <span class="kpi-pill">TOTAL</span>
+            <div class="kpi-value">{{ total }}</div>
+            <div class="kpi-label">MOTORES</div>
+        </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'motores:motor_list' %}?evidencia=verde" class="kpi-card-link">
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-verde"><i class="bi bi-shield-check"></i></div>
+            <span class="kpi-pill">{{ pct_verde }}%</span>
+            <div class="kpi-value" style="color:#5c7d1c">{{ verde }}</div>
+            <div class="kpi-label">EVIDENCIA COMPLETA</div>
+        </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'motores:motor_list' %}?evidencia=naranja" class="kpi-card-link">
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-naranja"><i class="bi bi-exclamation-triangle"></i></div>
+            <span class="kpi-pill">{{ pct_naranja }}%</span>
+            <div class="kpi-value" style="color:#b06400">{{ naranja }}</div>
+            <div class="kpi-label">EVIDENCIA PARCIAL</div>
+        </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'motores:motor_list' %}?evidencia=rojo" class="kpi-card-link">
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-rojo"><i class="bi bi-x-octagon"></i></div>
+            <span class="kpi-pill">{{ pct_rojo }}%</span>
+            <div class="kpi-value" style="color:#b02330">{{ rojo }}</div>
+            <div class="kpi-label">SIN EVIDENCIA</div>
+        </div>
+        </a>
+    </div>
+</div>
+
+<div class="card-hg p-3 mb-4">
+    <div class="section-title mb-3"><i class="bi bi-pie-chart-fill"></i> Distribución por ubicación</div>
+    <div class="location-statistic">
+        <div class="location-chart-circle" style="--chart-background: {{ ubicaciones_grafico }};">
+            <div class="location-donut-center">
+                <strong>{{ total }}</strong>
+                <span>MOTORES</span>
+            </div>
+        </div>
+        <div class="location-legend">
+            {% for ubicacion in ubicaciones %}
+            <div class="location-legend-item">
+                <span class="location-dot" data-dot-color="{{ ubicacion.color }}"></span>
+                <span class="location-name">{{ ubicacion.nombre }}</span>
+                <strong>{{ ubicacion.total }}</strong>
+                <small>{{ ubicacion.porcentaje }}%</small>
+            </div>
+            {% empty %}
+            <span class="text-muted">No hay motores registrados.</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="card-hg p-3">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="section-title mb-0"><i class="bi bi-clock-history"></i> Últimos Motores Registrados</div>
+                <a href="{% url 'motores:motor_list' %}" class="small text-decoration-none">CLIC PARA VER TODOS</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hg align-middle">
+                    <thead><tr><th>Identification No.</th><th>Fábrica</th><th>Evidencia</th></tr></thead>
+                    <tbody>
+                        {% for motor in ultimos_motores %}
+                        <tr>
+                            <td><a href="{% url 'motores:motor_detail' motor.pk %}">{{ motor.identification_no }}</a></td>
+                            <td>{{ motor.fabrica }}</td>
+                            <td>
+                                <span class="badge-semaforo badge-{{ motor.evidencia_estado }}">
+                                    <span class="dot"></span> {{ motor.evidencia_count }}/3
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center text-muted py-4">No hay motores registrados.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card-hg p-3">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="section-title mb-0"><i class="bi bi-building"></i> Por Fábrica</div>
+                <a href="{% url 'motores:fabrica_list' %}" class="small text-decoration-none">CLIC PARA FILTRAR</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hg align-middle">
+                    <thead>
+                        <tr>
+                            <th>Fábrica</th>
+                            <th>Verde</th>
+                            <th>Naranja</th>
+                            <th>Rojo</th>
+                            <th>% Sin Evid.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in fabricas_mostradas %}
+                        <tr>
+                            <td>
+                                <div class="factory-name">{{ f.nombre }}</div>
+                                <div class="factory-total">{{ f.total }} motor{{ f.total|pluralize }}</div>
+                            </td>
+                            <td><span class="status-number status-green">{{ f.verde }}</span></td>
+                            <td><span class="status-number status-orange">{{ f.naranja }}</span></td>
+                            <td><span class="status-number status-red">{{ f.rojo }}</span></td>
+                            <td>
+                                <progress class="factory-progress" value="{{ f.pct_rojo }}" max="100" title="{{ f.pct_rojo }}% sin evidencia"></progress>
+                                <small class="text-muted">{{ f.pct_rojo }}% sin evidencia</small>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted py-4">No hay fábricas registradas.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="factory-summary">
+                <span><i class="bi bi-buildings"></i> {{ fabricas_activas }} fábrica{{ fabricas_activas|pluralize }} con motores</span>
+                <span>{{ fabricas_sin_motores }} sin registros</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll("[data-chart-background]").forEach((chart) => {
+        chart.style.background = chart.dataset.chartBackground;
+    });
+    document.querySelectorAll("[data-dot-color]").forEach((dot) => {
+        dot.style.backgroundColor = dot.dataset.dotColor;
+    });
+</script>
+{% endblock %}

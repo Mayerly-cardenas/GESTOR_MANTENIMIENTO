@@ -1,0 +1,133 @@
+{% extends "Motores/base.html" %}
+{% block title %}{% if object %}Editar Motor{% else %}Nuevo Motor{% endif %}{% endblock %}
+{% block header %}{% if object %}Editar Motor{% else %}Nuevo Motor{% endif %}{% endblock %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            Revisa los campos marcados antes de guardar.
+        </div>
+    {% endif %}
+    <div class="card-hg p-3 mb-3">
+        <div class="section-title">Identificación y Ubicación</div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Identification No. (ACS)</label>
+                {{ form.identification_no }}
+                {{ form.identification_no.errors }}
+            </div>
+            <div class="col-md-8">
+                <label class="form-label">Equipment Description</label>
+                {{ form.equipment_description }}
+                {{ form.equipment_description.errors }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Fábrica <span class="text-muted small">(opcional)</span></label>
+                {{ form.fabrica }}
+                {{ form.fabrica.errors }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Location ID <span class="text-muted small">(opcional)</span></label>
+                {{ form.ubicacion }}
+                {{ form.ubicacion.errors }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Electrical Room ID <span class="text-muted small">(opcional)</span></label>
+                {{ form.sala_electrica }}
+                {{ form.sala_electrica.errors }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">MV / LVD / MCC</label>
+                {{ form.mv_lvd_mcc }}
+                <datalist id="mv_lvd_mcc_options">
+                    <option value="MV">
+                    <option value="LVD">
+                    <option value="MCC">
+                </datalist>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <div class="form-check">
+                    {{ form.emergency_power_required }}
+                    <label class="form-check-label ms-1">Emergency Power Required</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-hg p-3 mb-3">
+        <div class="section-title">Potencia y Datos Eléctricos</div>
+        <div class="row g-3">
+            <div class="col-md-3"><label class="form-label">Power Motor HP</label>{{ form.power_hp }}</div>
+            <div class="col-md-3"><label class="form-label">Power Motor kW</label>{{ form.power_kw }}</div>
+            <div class="col-md-3"><label class="form-label">Power Consumer kVA</label>{{ form.power_kva }}</div>
+            <div class="col-md-3"><label class="form-label">Volt</label>{{ form.volt }}</div>
+            <div class="col-md-3"><label class="form-label">Current</label>{{ form.current }}</div>
+            <div class="col-md-3"><label class="form-label">Speed 1 - Speed 2</label>{{ form.speed_1 }}</div>
+            <div class="col-md-3"><label class="form-label">Starting</label>{{ form.starting }}</div>
+            <div class="col-md-3"><label class="form-label">Type</label>{{ form.tipo }}</div>
+            <div class="col-md-3"><label class="form-label">Protect. Class</label>{{ form.protection_class }}</div>
+            <div class="col-md-3"><label class="form-label">Insul. Temp. Rise</label>{{ form.insul_temp_rise }}</div>
+            <div class="col-md-3"><label class="form-label">Efficiency</label>{{ form.efficiency }}</div>
+        </div>
+    </div>
+
+    <div class="card-hg p-3 mb-3">
+        <div class="section-title">Fabricante y Protecciones</div>
+        <div class="row g-3">
+            <div class="col-md-4"><label class="form-label">Manufacturer ID</label>{{ form.manufacturer_id }}</div>
+            <div class="col-md-4"><label class="form-label">Supplier</label>{{ form.supplier }}</div>
+            <div class="col-md-4"><label class="form-label">Pastil Current A</label>{{ form.pastil_current_a }}</div>
+            <div class="col-md-4"><label class="form-label">Breaker Current A</label>{{ form.breaker_current_a }}</div>
+            <div class="col-md-4"><label class="form-label">Heater Serial</label>{{ form.heater_serial }}</div>
+            <div class="col-md-4"><label class="form-label">Heater Current</label>{{ form.heater_current }}</div>
+        </div>
+    </div>
+
+    <div class="card-hg p-3 mb-3">
+        <div class="section-title">Datos Técnicos</div>
+        <div class="row g-3">
+            <div class="col-md-3"><label class="form-label">Nema</label>{{ form.nema }}</div>
+            <div class="col-md-3"><label class="form-label">Serial</label>{{ form.serial }}</div>
+            <div class="col-md-3"><label class="form-label">Mounted</label>{{ form.mounted }}</div>
+            <div class="col-md-3"><label class="form-label">Frame</label>{{ form.frame }}</div>
+            <div class="col-md-3"><label class="form-label">Torque Nm</label>{{ form.torque_nm }}</div>
+            <div class="col-md-3"><label class="form-label">Poles</label>{{ form.poles }}</div>
+            <div class="col-md-3"><label class="form-label">F.S</label>{{ form.fs }}</div>
+            <div class="col-md-3"><label class="form-label">Ron NED (LA)</label>{{ form.ron_ned_la }}</div>
+            <div class="col-md-3"><label class="form-label">Ron ED (LL)</label>{{ form.ron_ed_ll }}</div>
+        </div>
+    </div>
+
+    <div class="card-hg p-3 mb-3">
+        <div class="section-title">Evidencia Fotográfica</div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Imagen Motor</label>
+                {{ form.imagen_motor }}
+                {% if object.imagen_motor %}<div class="evidence-slot mt-2"><img src="{{ object.imagen_motor.url }}"></div>{% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Imagen Placa</label>
+                {{ form.imagen_placa }}
+                {% if object.imagen_placa %}<div class="evidence-slot mt-2"><img src="{{ object.imagen_placa.url }}"></div>{% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Imagen Switches</label>
+                {{ form.imagen_switches }}
+                {% if object.imagen_switches %}<div class="evidence-slot mt-2"><img src="{{ object.imagen_switches.url }}"></div>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-hg-blue">Guardar</button>
+        <a href="{% url 'motores:motor_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

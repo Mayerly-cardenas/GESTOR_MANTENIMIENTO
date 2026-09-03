@@ -1,0 +1,49 @@
+{% extends "Motores/base.html" %}
+{% block title %}Fabricantes{% endblock %}
+{% block header %}Fabricantes{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'motores:fabricante_create' %}" class="btn btn-hg-blue"><i class="bi bi-plus-lg"></i> Nuevo Fabricante</a>
+{% endblock %}
+{% block content %}
+<div class="card-hg p-3">
+    <form method="get" class="d-flex mb-3" style="max-width: 360px;">
+        <input type="text" name="q" value="{{ q }}" class="form-control me-2" placeholder="Buscar fabricante">
+        <button class="btn btn-hg-navy" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+    <table class="table table-hg align-middle">
+        <thead><tr><th>Fabricante</th><th>Motores</th><th></th></tr></thead>
+        <tbody>
+            {% for fabricante in fabricantes %}
+            <tr>
+                <td>{{ fabricante.nombre }}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse"
+                            data-bs-target="#motores-fabricante-{{ fabricante.pk }}">
+                        <i class="bi bi-cpu"></i> {{ fabricante.motores.all|length }}
+                    </button>
+                </td>
+                <td class="text-end">
+                    <a href="{% url 'motores:fabricante_update' fabricante.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'motores:fabricante_delete' fabricante.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                </td>
+            </tr>
+            <tr class="collapse" id="motores-fabricante-{{ fabricante.pk }}">
+                <td colspan="3" class="bg-light">
+                    {% if fabricante.motores.all %}
+                        <ul class="mb-0">
+                            {% for motor in fabricante.motores.all %}
+                            <li><a href="{% url 'motores:motor_detail' motor.pk %}">{{ motor.identification_no }}</a> — {{ motor.equipment_description }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <span class="text-muted">Sin motores relacionados.</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">No hay fabricantes registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

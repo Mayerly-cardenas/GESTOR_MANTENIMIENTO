@@ -1,0 +1,128 @@
+from django.db import migrations
+
+UBICACIONES = [
+    "Subsistema 211-AD1",
+    "Alimentador Schenk",
+    "Transporte hacia Tolva",
+    "Transporte hacia Apilador",
+    "Apliador",
+    "Trituradora",
+    "Unidad Hidraulica",
+    "Unidad Hidraulica Pantalla Trituradora",
+    "Unidad Hidraulica Boom Apilador",
+    "Cuarto Electrico Hazemag Piso 2",
+    "Sobre Banda 211-BT2",
+    "Transformadores",
+    "Reclamo Hazemag",
+    "Tolvas  Alimentación Crudo",
+    "Subsistema 311-RC1",
+    "Transporte hacia molino de crudo",
+    "Tolvas Alimentación Crudo",
+    "Torre Molino de crudo",
+    "Primer piso de crudo",
+    "Cuarto unidad lubricacion crudo",
+    "Bajo Filtro de mangas principal",
+    "Primer piso torre precalentadora",
+    "Quinto piso torre precalentadora",
+    "Torre de crudo",
+    "Filtro del MCC Torre",
+    "Precalcinador",
+    "Torre",
+    "Jardin Horno",
+    "Cuarto unidad de lubricacion horno",
+    "Enfriador",
+    "Horno",
+    "Lado jardin horno",
+    "Filtro de mangas enfriador",
+    "Triturador de martillos enfriador",
+    "Cuarto lubricacion",
+    "Primer piso enfriador",
+    "Segundo nivel enfriador",
+    "Trituradora de clinker",
+    "Intercambiador de calor",
+    "Chimenea Enfriador",
+    "Tanque combustible",
+    "Segundo piso enfriador",
+    "Frente a enfriador",
+    "Sobre silo de 493-322",
+    "Sobre Silo 493-322",
+    "Transporte de clinker hacia silos",
+    "Trasnportador hacia silo 493-323",
+    "Sobre silo de 493-TL1",
+    "Sobre silo de 493-321",
+    "Sobre silo de 493-323",
+    "Fuera de MCC Descarga",
+    "Molino de cemento 1",
+    "Molino de cemento 2",
+    "Frente a la secadora",
+    "Molino C3",
+    "Transporte Clinker Silos",
+    "Banda Alimentacion Tolva C1/C2",
+    "Silo Clinker Prensado  para C1/C2",
+    "Prensa de Rodillos",
+    "Molino de cemento 1( Motores principales)",
+    "Molino de cemento 1 (Separador 2)",
+    "Almacen",
+    "Molino de cemento 1(Parte superior)",
+    "Variador del separador",
+    "Molino de cemento 1,Aero Descarga Elevador",
+    "Molino de cemento 1(Separador 2)",
+    "Molino de cemento 1 (Motores principales)",
+    "Cuarto motor principal",
+    "Molino de cemento 1 y 2",
+    "Parte superior Silo  14 Tn",
+    "Sobre  silos de empaque",
+    "Encima de silos de empaque",
+    "Molino de Cemento 3",
+    "Torre aditivos crudo",
+    "Al lado de pensilvania",
+    "Plataforma debajo de M50-BT1",
+    "Sobre banda BTC",
+    "Al lado de la banda BTC",
+    "Tolvas molino de cemento 1 y 2",
+    "Cuarto combustible",
+    "Cuarto alimentadores",
+    "Banda transporte hacia elevador",
+    "Salida de elevador",
+    "Ultimo piso edificio de carbon",
+    "Torre de Carbon",
+    "Banda transporte hacia tolva",
+    "Primer piso torre de carbon",
+    "Sobre Silo de Carbon Pulverizado",
+    "Torre precalentadora",
+    "Cuarto alimentadores carbon",
+    "Cuarto sopladores carbon",
+    "Pretolva 1",
+    "Pretolva 2",
+    "Pensilvania",
+    "Apilador bedeschi",
+    "Trituradora Bedeschi",
+    "Banda transportadora apilador bedeschi",
+    "Banda transportadora bedeschi",
+    "Banda transportadora Reclamador",
+    "Molienda Separada 2",
+    "Molienda Separada ..",
+    "Transporte Puzolana Enfriador",
+]
+
+
+def crear_ubicaciones(apps, schema_editor):
+    Ubicacion = apps.get_model("Motores", "Ubicacion")
+    for nombre in UBICACIONES:
+        Ubicacion.objects.get_or_create(nombre=nombre)
+
+
+def eliminar_ubicaciones(apps, schema_editor):
+    Ubicacion = apps.get_model("Motores", "Ubicacion")
+    Ubicacion.objects.filter(nombre__in=UBICACIONES, fabrica__isnull=True).delete()
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ("Motores", "0006_alter_ubicacion_options_and_more"),
+    ]
+
+    operations = [
+        migrations.RunPython(crear_ubicaciones, eliminar_ubicaciones),
+    ]

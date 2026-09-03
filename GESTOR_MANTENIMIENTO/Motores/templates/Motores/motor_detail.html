@@ -1,0 +1,116 @@
+{% extends "Motores/base.html" %}
+{% block title %}{{ motor.identification_no }}{% endblock %}
+{% block header %}{{ motor.identification_no }} · {{ motor.equipment_description }}{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'motores:motor_update' motor.pk %}" class="btn btn-hg-blue"><i class="bi bi-pencil"></i> Editar</a>
+    <a href="{% url 'motores:motor_list' %}" class="btn btn-outline-secondary">Volver</a>
+{% endblock %}
+{% block content %}
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card-hg p-3 mb-3">
+            <div class="section-title">Identificación y Ubicación</div>
+            <div class="row row-cols-2 g-2">
+                <div><span class="text-muted small d-block">Identification No. (ACS)</span>{{ motor.identification_no }}</div>
+                <div><span class="text-muted small d-block">Equipment Description</span>{{ motor.equipment_description }}</div>
+                <div><span class="text-muted small d-block">Fábrica</span>{{ motor.fabrica }}</div>
+                <div><span class="text-muted small d-block">Location ID</span>{{ motor.ubicacion.nombre }}</div>
+                <div><span class="text-muted small d-block">Electrical Room ID</span>{{ motor.sala_electrica|default:"—" }}</div>
+                <div><span class="text-muted small d-block">MV / LVD / MCC</span>{{ motor.mv_lvd_mcc|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Emergency Power Required</span>{{ motor.emergency_power_required|yesno:"Sí,No" }}</div>
+            </div>
+        </div>
+
+        <div class="card-hg p-3 mb-3">
+            <div class="section-title">Potencia y Datos Eléctricos</div>
+            <div class="row row-cols-3 g-2">
+                <div><span class="text-muted small d-block">Power Motor HP</span>{{ motor.power_hp|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Power Motor kW</span>{{ motor.power_kw|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Power Consumer kVA</span>{{ motor.power_kva|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Volt</span>{{ motor.volt|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Current</span>{{ motor.current|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Speed 1 - Speed 2</span>{{ motor.speed_1|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Starting</span>{{ motor.starting|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Type</span>{{ motor.tipo|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Protect. Class</span>{{ motor.protection_class|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Insul. Temp. Rise</span>{{ motor.insul_temp_rise|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Efficiency</span>{{ motor.efficiency|default:"—" }}</div>
+            </div>
+        </div>
+
+        <div class="card-hg p-3 mb-3">
+            <div class="section-title">Fabricante y Protecciones</div>
+            <div class="row row-cols-3 g-2">
+                <div><span class="text-muted small d-block">Manufacturer ID</span>{{ motor.manufacturer_id|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Supplier</span>{{ motor.supplier|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Pastil Current A</span>{{ motor.pastil_current_a|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Breaker Current A</span>{{ motor.breaker_current_a|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Heater Serial</span>{{ motor.heater_serial|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Heater Current</span>{{ motor.heater_current|default:"—" }}</div>
+            </div>
+        </div>
+
+        <div class="card-hg p-3">
+            <div class="section-title">Datos Técnicos</div>
+            <div class="row row-cols-3 g-2">
+                <div><span class="text-muted small d-block">Nema</span>{{ motor.nema|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Serial</span>{{ motor.serial|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Mounted</span>{{ motor.mounted|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Frame</span>{{ motor.frame|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Torque Nm</span>{{ motor.torque_nm|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Poles</span>{{ motor.poles|default:"—" }}</div>
+                <div><span class="text-muted small d-block">F.S</span>{{ motor.fs|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Ron NED (LA)</span>{{ motor.ron_ned_la|default:"—" }}</div>
+                <div><span class="text-muted small d-block">Ron ED (LL)</span>{{ motor.ron_ed_ll|default:"—" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card-hg p-3">
+            <div class="section-title d-flex align-items-center justify-content-between">
+                <span>Evidencia Fotográfica</span>
+                <span class="badge-semaforo badge-{{ motor.evidencia_estado }}">
+                    <span class="dot"></span> {{ motor.evidencia_count }}/3
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <div class="text-muted small mb-1">Imagen Motor</div>
+                <div class="evidence-slot">
+                    {% if motor.imagen_motor %}
+                        <img src="{{ motor.imagen_motor.url }}" alt="Imagen motor">
+                    {% else %}
+                        <i class="bi bi-image text-muted fs-1"></i>
+                        <div class="text-muted small">Sin evidencia</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="text-muted small mb-1">Imagen Placa</div>
+                <div class="evidence-slot">
+                    {% if motor.imagen_placa %}
+                        <img src="{{ motor.imagen_placa.url }}" alt="Imagen placa">
+                    {% else %}
+                        <i class="bi bi-image text-muted fs-1"></i>
+                        <div class="text-muted small">Sin evidencia</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <div class="text-muted small mb-1">Imagen Switches</div>
+                <div class="evidence-slot">
+                    {% if motor.imagen_switches %}
+                        <img src="{{ motor.imagen_switches.url }}" alt="Imagen switches">
+                    {% else %}
+                        <i class="bi bi-image text-muted fs-1"></i>
+                        <div class="text-muted small">Sin evidencia</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

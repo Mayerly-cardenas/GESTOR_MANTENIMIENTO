@@ -1,0 +1,27 @@
+{% extends "Cuentas/auth_base.html" %}
+{% block title %}Iniciar sesión{% endblock %}
+{% block auth_title %}Iniciar sesión{% endblock %}
+{% block auth_subtitle %}Ingresa con tu usuario y contraseña para acceder al Gestor de Mantenimiento.{% endblock %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <div class="mb-3">
+        <label class="form-label">Usuario</label>
+        {{ form.username }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        {{ form.password }}
+    </div>
+    <button type="submit" class="btn btn-hg-blue w-100">Ingresar</button>
+</form>
+<div class="auth-footer">
+    <a href="{% url 'cuentas:password_reset' %}">¿Olvidaste tu contraseña?</a>
+</div>
+<div class="auth-footer">
+    ¿No tienes cuenta? <a href="{% url 'cuentas:registro' %}">Solicitar acceso</a>
+</div>
+{% endblock %}

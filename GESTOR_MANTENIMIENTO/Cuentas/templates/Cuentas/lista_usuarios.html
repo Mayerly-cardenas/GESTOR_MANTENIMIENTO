@@ -1,0 +1,54 @@
+{% extends "Motores/base.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block header %}Usuarios{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'cuentas:crear_usuario' %}" class="btn btn-hg-blue"><i class="bi bi-person-plus"></i> Crear Usuario</a>
+{% endblock %}
+{% block content %}
+<div class="card-hg p-3">
+    <div class="table-responsive">
+        <table class="table table-hg align-middle">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td class="fw-semibold">{{ usuario.username }}</td>
+                    <td>{{ usuario.first_name|default:"—" }}</td>
+                    <td>{{ usuario.email|default:"—" }}</td>
+                    <td>{{ usuario.perfil.get_rol_display|default:"—" }}</td>
+                    <td>
+                        {% if usuario.is_active and usuario.perfil.aprobado %}
+                            <span class="badge-semaforo badge-verde"><span class="dot"></span> Activo</span>
+                        {% else %}
+                            <span class="badge-semaforo badge-naranja"><span class="dot"></span> Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        {% if usuario != request.user and not usuario.is_superuser %}
+                        <form method="post" action="{% url 'cuentas:eliminar_usuario' usuario.pk %}" class="d-inline"
+                              onsubmit="return confirm('¿Deseas eliminar este usuario? Esta acción no se puede deshacer.');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar usuario">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center text-muted py-4">No hay usuarios registrados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

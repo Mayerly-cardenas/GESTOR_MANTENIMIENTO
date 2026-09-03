@@ -1,0 +1,20 @@
+{% extends "Motores/base.html" %}
+{% block title %}{% if object %}Editar Ubicación{% else %}Nueva Ubicación{% endif %}{% endblock %}
+{% block header %}{% if object %}Editar Ubicación{% else %}Nueva Ubicación{% endif %}{% endblock %}
+{% block content %}
+<div class="card-hg p-3" style="max-width: 480px;">
+    <form method="post">
+        {% csrf_token %}
+        <label class="form-label">Fábrica</label>
+        {{ form.fabrica }}
+        <label class="form-label mt-2">Nombre</label>
+        {{ form.nombre }}
+        <label class="form-label mt-2">Código</label>
+        {{ form.codigo }}
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-hg-blue">Guardar</button>
+            <a href="{% url 'motores:ubicacion_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

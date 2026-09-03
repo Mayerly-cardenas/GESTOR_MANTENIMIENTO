@@ -1,0 +1,44 @@
+{% extends "Motores/base.html" %}
+{% block title %}Aprobar usuarios{% endblock %}
+{% block header %}Aprobar Usuarios{% endblock %}
+{% block content %}
+<div class="card-hg p-3">
+    <div class="table-responsive">
+        <table class="table table-hg align-middle">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Solicitado</th>
+                    <th class="text-end">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for perfil in pendientes %}
+                <tr>
+                    <td class="fw-semibold">{{ perfil.user.username }}</td>
+                    <td>{{ perfil.user.first_name|default:"—" }}</td>
+                    <td>{{ perfil.user.email }}</td>
+                    <td>{{ perfil.creado_en|date:"d/m/Y H:i" }}</td>
+                    <td class="text-end">
+                        <form method="post" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="perfil_id" value="{{ perfil.pk }}">
+                            <button type="submit" name="accion" value="aprobar" class="btn btn-sm btn-hg-green">
+                                <i class="bi bi-check-lg"></i> Aprobar
+                            </button>
+                            <button type="submit" name="accion" value="rechazar" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-x-lg"></i> Rechazar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center text-muted py-4">No hay solicitudes pendientes.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

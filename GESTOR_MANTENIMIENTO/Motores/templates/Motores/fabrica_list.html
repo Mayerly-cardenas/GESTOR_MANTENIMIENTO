@@ -1,0 +1,26 @@
+{% extends "Motores/base.html" %}
+{% block title %}Fábricas{% endblock %}
+{% block header %}Fábricas{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'motores:fabrica_create' %}" class="btn btn-hg-blue"><i class="bi bi-plus-lg"></i> Nueva Fábrica</a>
+{% endblock %}
+{% block content %}
+<div class="card-hg p-3">
+    <table class="table table-hg align-middle">
+        <thead><tr><th>Fábrica</th><th></th></tr></thead>
+        <tbody>
+            {% for fabrica in fabricas %}
+            <tr>
+                <td>{{ fabrica.nombre }}</td>
+                <td class="text-end">
+                    <a href="{% url 'motores:fabrica_update' fabrica.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'motores:fabrica_delete' fabrica.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2" class="text-center text-muted py-4">No hay fábricas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

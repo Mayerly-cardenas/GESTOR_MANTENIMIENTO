@@ -1,0 +1,49 @@
+{% extends "Motores/base.html" %}
+{% block title %}Salas Eléctricas{% endblock %}
+{% block header %}Salas Eléctricas{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'motores:sala_create' %}" class="btn btn-hg-blue"><i class="bi bi-plus-lg"></i> Nueva Sala</a>
+{% endblock %}
+{% block content %}
+<div class="card-hg p-3">
+    <form method="get" class="d-flex mb-3" style="max-width: 360px;">
+        <input type="text" name="q" value="{{ q }}" class="form-control me-2" placeholder="Buscar sala eléctrica">
+        <button class="btn btn-hg-navy" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+    <table class="table table-hg align-middle">
+        <thead><tr><th>Electrical Room ID</th><th>Motores</th><th></th></tr></thead>
+        <tbody>
+            {% for sala in salas %}
+            <tr>
+                <td>{{ sala.nombre }}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse"
+                            data-bs-target="#motores-sala-{{ sala.pk }}">
+                        <i class="bi bi-cpu"></i> {{ sala.motores.all|length }}
+                    </button>
+                </td>
+                <td class="text-end">
+                    <a href="{% url 'motores:sala_update' sala.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'motores:sala_delete' sala.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                </td>
+            </tr>
+            <tr class="collapse" id="motores-sala-{{ sala.pk }}">
+                <td colspan="3" class="bg-light">
+                    {% if sala.motores.all %}
+                        <ul class="mb-0">
+                            {% for motor in sala.motores.all %}
+                            <li><a href="{% url 'motores:motor_detail' motor.pk %}">{{ motor.identification_no }}</a> — {{ motor.equipment_description }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <span class="text-muted">Sin motores relacionados.</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center text-muted py-4">No hay salas eléctricas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
