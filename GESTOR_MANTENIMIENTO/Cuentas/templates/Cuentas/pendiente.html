@@ -9,6 +9,9 @@
         Un administrador debe revisar y aprobar tu solicitud de acceso.
         Te notificaremos por correo electrónico en cuanto puedas ingresar.
     </p>
-    <a href="{% url 'cuentas:logout' %}" class="btn btn-outline-secondary mt-3">Cerrar sesión</a>
+    <form method="post" action="{% url 'cuentas:logout' %}" class="mt-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-secondary">Cerrar sesión</button>
+    </form>
 </div>
 {% endblock %}
