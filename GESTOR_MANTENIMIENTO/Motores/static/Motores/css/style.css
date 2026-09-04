@@ -550,10 +550,11 @@ body {
 }
 
 .auth-body {
-    background-image: linear-gradient(90deg, #96c52a 0%, #11b9dc 56%, #1f4775 100%);
-    background-position: 0 0;
+    background-color: #fff;
+    background-image: url('/static/img/login_holcim.png');
+    background-position: center center;
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: 975px 311px;
     min-height: 100vh;
 }
 
@@ -572,6 +573,12 @@ body {
     width: 100%;
     max-width: 440px;
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 700px) {
+    .auth-body {
+        background-size: 100% auto;
+    }
 }
 
 .auth-brand {
@@ -634,8 +641,12 @@ body {
 }
 
 .logout-link {
+    background: none;
+    border: 0;
     color: #d7e2ef;
+    cursor: pointer;
     margin-left: auto;
+    padding: 0;
 }
 
 .logout-link:hover { color: #fff; }
