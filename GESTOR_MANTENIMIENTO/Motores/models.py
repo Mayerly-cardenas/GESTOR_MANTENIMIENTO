@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -135,6 +136,14 @@ class Motor(models.Model):
 
     created_at = models.DateTimeField("Creado", auto_now_add=True)
     updated_at = models.DateTimeField("Actualizado", auto_now=True)
+    actualizado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="motores_actualizados",
+        verbose_name="Actualizado por",
+    )
 
     class Meta:
         verbose_name = "Motor"

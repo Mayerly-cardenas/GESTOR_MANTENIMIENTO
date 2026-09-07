@@ -57,7 +57,7 @@ class SalaElectricaForm(forms.ModelForm):
 class MotorForm(forms.ModelForm):
     class Meta:
         model = Motor
-        exclude = ["created_at", "updated_at"]
+        exclude = ["created_at", "updated_at", "actualizado_por"]
         widgets = {
             "identification_no": forms.TextInput(attrs={"class": INPUT_CLASS}),
             "equipment_description": forms.TextInput(attrs={"class": INPUT_CLASS}),

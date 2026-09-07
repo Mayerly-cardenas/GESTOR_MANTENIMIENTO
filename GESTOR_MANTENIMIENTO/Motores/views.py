@@ -65,6 +65,10 @@ class MotorUpdateView(SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy("motores:motor_list")
     success_message = "Motor actualizado correctamente."
 
+    def form_valid(self, form):
+        form.instance.actualizado_por = self.request.user
+        return super().form_valid(form)
+
 
 class MotorDeleteView(DeleteView):
     model = Motor
