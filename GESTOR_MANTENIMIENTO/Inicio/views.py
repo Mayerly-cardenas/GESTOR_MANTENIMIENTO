@@ -2,6 +2,7 @@ from django.db.models import Count, Q
 from django.utils.safestring import mark_safe
 from django.shortcuts import render
 
+from Mantenimiento_Electrico.models import RegistroActividad
 from Motores.models import Fabricante, Motor, Ubicacion
 
 
@@ -79,5 +80,9 @@ def inicio(request):
         "fabricas_activas": len(fabricas),
         "fabricas_sin_motores": Fabricante.objects.filter(motores_fabrica__isnull=True).count(),
         "ultimos_motores": motores.order_by("-created_at")[:5],
+        "ultimas_actividades": RegistroActividad.objects.select_related(
+            "operario", "motor", "sala_electrica"
+        )[:5],
+        "total_actividades": RegistroActividad.objects.count(),
     }
-    return render(request, "inicio.html", context) 
+    return render(request, "inicio.html", context)
