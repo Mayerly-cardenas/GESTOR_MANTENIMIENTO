@@ -1,0 +1,16 @@
+{% extends "Motores/base.html" %}
+{% block title %}Eliminar registro{% endblock %}
+{% block header %}Eliminar registro{% endblock %}
+{% block content %}
+<div class="card-hg p-4" style="max-width: 560px;">
+    <p>¿Seguro que deseas eliminar el registro de <strong>{{ object.get_tipo_actividad_display }}</strong> del
+        {{ object.fecha_hora|date:"d/m/Y H:i" }} realizado por {{ object.operario }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Eliminar</button>
+            <a href="{% url 'mantenimiento_electrico:index' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

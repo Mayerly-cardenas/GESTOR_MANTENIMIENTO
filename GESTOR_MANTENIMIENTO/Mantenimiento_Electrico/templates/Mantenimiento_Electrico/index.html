@@ -1,10 +1,96 @@
 {% extends "Motores/base.html" %}
-{% block title %}{{ modulo_titulo }}{% endblock %}
-{% block header %}{{ modulo_titulo }}{% endblock %}
+{% block title %}Mantenimiento Eléctrico{% endblock %}
+{% block header %}Bitácora de Mantenimiento Eléctrico{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'mantenimiento_electrico:registro_create' %}" class="btn btn-hg-blue">
+        <i class="bi bi-plus-lg"></i> Nuevo registro
+    </a>
+{% endblock %}
 {% block content %}
-<div class="card-hg p-5 text-center">
-    <i class="bi {{ modulo_icono }}" style="font-size:3rem; color: var(--hg-blue);"></i>
-    <h4 class="mt-3" style="color: var(--hg-navy);">Módulo en construcción</h4>
-    <p class="text-muted mb-0">Próximamente encontrarás aquí el registro y seguimiento de {{ modulo_titulo|lower }}.</p>
+<div class="row g-3 mb-3">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div>
+                <div class="text-muted small">REGISTROS TOTALES</div>
+                <div class="fs-3 fw-bold" style="color: var(--hg-navy);">{{ total_registros }}</div>
+            </div>
+            <i class="bi bi-journal-text" style="font-size:1.75rem; color: var(--hg-blue);"></i>
+        </div>
+    </div>
+</div>
+
+<div class="card-hg p-3">
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-md-6">
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Buscar por descripción">
+        </div>
+        <div class="col-md-4">
+            <select name="tipo" class="form-select">
+                <option value="">Todos los tipos de actividad</option>
+                {% for valor, etiqueta in tipos_actividad %}
+                <option value="{{ valor }}" {% if valor == tipo %}selected{% endif %}>{{ etiqueta }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-hg-navy w-100" type="submit"><i class="bi bi-search"></i> Filtrar</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hg align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha y hora</th>
+                    <th>Operario</th>
+                    <th>Tipo de actividad</th>
+                    <th>Motor</th>
+                    <th>Ubicación / Sala</th>
+                    <th>Descripción</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registro in registros %}
+                <tr>
+                    <td class="text-nowrap">{{ registro.fecha_hora|date:"d/m/Y H:i" }}</td>
+                    <td class="fw-semibold">{{ registro.operario.get_full_name|default:registro.operario.username }}</td>
+                    <td>{{ registro.get_tipo_actividad_display }}</td>
+                    <td>{{ registro.motor|default:"—" }}</td>
+                    <td>{{ registro.sala_electrica|default:registro.ubicacion|default:"—" }}</td>
+                    <td>{{ registro.descripcion|truncatechars:80 }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'mantenimiento_electrico:registro_detail' registro.pk %}" class="btn btn-sm btn-outline-secondary" title="Ver detalle">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        {% if es_administrador %}
+                        <a href="{% url 'mantenimiento_electrico:registro_delete' registro.pk %}" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">Todavía no hay registros de actividad.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if tipo %}&tipo={{ tipo }}{% endif %}">Anterior</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if tipo %}&tipo={{ tipo }}{% endif %}">Siguiente</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 </div>
 {% endblock %}
