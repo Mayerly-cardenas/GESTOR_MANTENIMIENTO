@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'Motores',
     'Inicio',
     'Mantenimiento_Electrico',
+    'Mantenimiento_Mecanico',
+    'Mantenimiento_Preventivo',
 ]
 
 MIDDLEWARE = [
