@@ -15,4 +15,7 @@ __pycache__/
 
 # IDE
 .vscode/
+!.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
