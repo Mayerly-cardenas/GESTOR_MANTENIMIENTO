@@ -1,0 +1,18 @@
+{% extends "Motores/base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block header %}{{ titulo }}{% endblock %}
+{% block content %}
+<div class="banner-hg mb-4">
+    <div class="banner-icon"><i class="bi {{ icono }}"></i></div>
+    <div>
+        <div class="banner-eyebrow">HOLCIM GSTOR</div>
+        <div class="banner-title">{{ titulo }}</div>
+        <div class="banner-subtitle">PLANTA NOBSA</div>
+    </div>
+</div>
+
+<div class="card-hg p-4">
+    <div class="section-title mb-2">Módulo integrado</div>
+    <p class="text-muted mb-0">{{ descripcion }} Las funciones específicas de este módulo están pendientes de desarrollo.</p>
+</div>
+{% endblock %}

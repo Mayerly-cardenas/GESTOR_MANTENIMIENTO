@@ -42,6 +42,14 @@
                href="{% url 'mantenimiento_electrico:index' %}">
                 <i class="bi bi-lightning"></i> Mantenimiento Eléctrico
             </a>
+            <a class="nav-link {% if request.resolver_match.namespace == 'mantenimiento_mecanico' %}active{% endif %}"
+               href="{% url 'mantenimiento_mecanico:index' %}">
+                <i class="bi bi-gear-wide-connected"></i> Mantenimiento Mecánico
+            </a>
+            <a class="nav-link {% if request.resolver_match.namespace == 'mantenimiento_preventivo' %}active{% endif %}"
+               href="{% url 'mantenimiento_preventivo:index' %}">
+                <i class="bi bi-calendar2-check"></i> Mantenimiento Preventivo
+            </a>
 
             {% if es_administrador %}
             <div class="sidebar-section-label">ADMINISTRACIÓN</div>
