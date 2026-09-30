@@ -193,6 +193,8 @@ python manage.py test
 
 `check` valida la configuración del proyecto. `test` ejecuta las pruebas Django disponibles. La cobertura actual es limitada; revisa los resultados del comando antes de considerar un cambio verificado. `_test_login.py` es un script manual de prueba HTTP y no sustituye a la suite de pruebas Django.
 
+Estado comprobado en este entorno: `python manage.py check` pasa. `python manage.py test` descubre una prueba y actualmente falla en `Motores.tests.MotorAuditTest.test_update_records_authenticated_user_and_timestamp`: el doble de formulario `MotorFormStub` no tiene el atributo `cleaned_data` que utiliza `SuccessMessageMixin`. Esta falla está pendiente de corrección.
+
 Al modificar modelos, genera migraciones y aplícalas:
 
 ```powershell
