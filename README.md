@@ -78,12 +78,12 @@ Las rutas raíz del proyecto se configuran en `GESTOR_MANTENIMIENTO/Mantenimient
 
 ## Requisitos y puesta en marcha
 
-Los siguientes pasos son para Windows PowerShell. **Se reutiliza el entorno virtual existente `venv/` en la raíz del repositorio; no hace falta crear otro.** Ejecuta los comandos desde la carpeta raíz del repositorio.
+Los siguientes pasos son para Windows PowerShell. **Se reutiliza el entorno virtual existente `.venv/` en la raíz del repositorio; no hace falta crear otro.** Ejecuta los comandos desde la carpeta raíz del repositorio.
 
 1. Activa el entorno virtual:
 
 	```powershell
-	.\venv\Scripts\Activate.ps1
+	.\.venv\Scripts\Activate.ps1
 	```
 
 2. `requirements.txt` está guardado en UTF-16. Si necesitas instalar o actualizar las dependencias, conviértelo a un archivo temporal UTF-8 para que `pip` pueda leerlo:
@@ -164,7 +164,7 @@ Las secciones de motores y sus datos relacionados incluyen rutas de creación, e
 .
 ├── README.md
 ├── requirements.txt
-├── venv/                         # Entorno virtual existente; no versionar
+├── .venv/                        # Entorno virtual existente; no versionar
 └── GESTOR_MANTENIMIENTO/
 	 ├── manage.py
 	 ├── db.sqlite3                # Base de datos local de desarrollo
