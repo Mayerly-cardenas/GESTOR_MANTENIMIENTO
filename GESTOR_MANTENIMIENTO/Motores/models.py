@@ -1,5 +1,19 @@
+from io import BytesIO
+from pathlib import Path
+
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.db import models
+from PIL import Image
+
+
+MAX_IMAGE_SIZE = 100 * 1024 * 1024
+
+
+def validate_image_size(image):
+    if image.size > MAX_IMAGE_SIZE:
+        raise ValidationError("La imagen no puede superar los 100 MB.")
 
 
 class Fabricante(models.Model):
@@ -130,9 +144,18 @@ class Motor(models.Model):
     efficiency = models.DecimalField("Efficiency", max_digits=6, decimal_places=2, null=True, blank=True)
 
     # Evidencia fotográfica
-    imagen_motor = models.ImageField("Imagen Motor", upload_to="motores/motor/", null=True, blank=True)
-    imagen_placa = models.ImageField("Imagen Placa", upload_to="motores/placa/", null=True, blank=True)
-    imagen_switches = models.ImageField("Imagen Switches", upload_to="motores/switches/", null=True, blank=True)
+    imagen_motor = models.ImageField(
+        "Imagen Motor", upload_to="motores/motor/", null=True, blank=True,
+        validators=[validate_image_size],
+    )
+    imagen_placa = models.ImageField(
+        "Imagen Placa", upload_to="motores/placa/", null=True, blank=True,
+        validators=[validate_image_size],
+    )
+    imagen_switches = models.ImageField(
+        "Imagen Switches", upload_to="motores/switches/", null=True, blank=True,
+        validators=[validate_image_size],
+    )
 
     created_at = models.DateTimeField("Creado", auto_now_add=True)
     updated_at = models.DateTimeField("Actualizado", auto_now=True)
@@ -152,6 +175,39 @@ class Motor(models.Model):
 
     def __str__(self):
         return f"{self.identification_no} - {self.equipment_description}"
+
+    def save(self, *args, **kwargs):
+        for field_name in ("imagen_motor", "imagen_placa", "imagen_switches"):
+            image_field = getattr(self, field_name)
+            if not image_field or image_field._committed:
+                continue
+            if image_field.size > MAX_IMAGE_SIZE:
+                raise ValidationError({field_name: "La imagen no puede superar los 100 MB."})
+
+            image_field.seek(0)
+            original = image_field.read()
+            image = Image.open(BytesIO(original))
+            image_format = image.format
+            if image_format not in ("JPEG", "PNG", "WEBP"):
+                image_field.seek(0)
+                continue
+
+            output = BytesIO()
+            save_options = {"optimize": True}
+            if image_format in ("JPEG", "WEBP"):
+                save_options["quality"] = 85
+            if "exif" in image.info:
+                save_options["exif"] = image.info["exif"]
+            if "icc_profile" in image.info:
+                save_options["icc_profile"] = image.info["icc_profile"]
+            image.save(output, format=image_format, **save_options)
+            compressed = output.getvalue()
+            if len(compressed) > MAX_IMAGE_SIZE:
+                raise ValidationError({field_name: "La imagen no puede superar los 100 MB después de comprimirla."})
+
+            image_field.save(Path(image_field.name).name, ContentFile(compressed), save=False)
+
+        super().save(*args, **kwargs)
 
     @property
     def evidencia_count(self):

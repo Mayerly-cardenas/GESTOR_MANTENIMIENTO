@@ -18,12 +18,20 @@ body {
 
 .sidebar {
     width: 250px;
+    height: 100vh;
+    height: 100dvh;
+    position: fixed !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
     background-color: var(--hg-navy);
     color: #fff;
     display: flex;
     flex-direction: column;
     padding: 1.25rem 0.75rem;
     flex-shrink: 0;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .sidebar-brand {
@@ -82,6 +90,7 @@ body {
 
 .main-content {
     flex: 1;
+    margin-left: 250px;
     padding: 1.75rem 2rem;
     overflow-x: auto;
 }
